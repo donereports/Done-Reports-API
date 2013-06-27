@@ -42,6 +42,7 @@ class Group
       :name => name,
       :org_name => org.name,
       :channel => irc_channel,
+      :channel_aliases => (irc_channel_aliases ? irc_channel_aliases.split(',') : []),
       :server => (ircserver ? ircserver.api_hash : nil),
       :timezone => due_timezone,
       :time => time,
