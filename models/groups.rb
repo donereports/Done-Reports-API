@@ -19,6 +19,7 @@ class Group
   property :email_recipient, String, :length => 255  # Additional email addresses to send the reports to
 
   property :irc_channel, String, :length => 100
+  property :irc_channel_aliases, String, :length => 255, :default => ''
 
   property :github_organization, String, :length => 100
   property :github_access_token, String, :length => 255

@@ -160,6 +160,7 @@ class Controller < Sinatra::Base
     server.groups.each do |group|
       groupInfo = {
         channel: group.irc_channel,
+        aliases: group.irc_channel_aliases.split(','),
         timezone: group.due_timezone,
         token: group.token,
         users: []

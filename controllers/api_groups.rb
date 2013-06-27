@@ -94,6 +94,7 @@ class Controller < Sinatra::Base
     group.due_timezone = params[:timezone] if params[:timezone]
     group.email_group_members = params[:email_members] if !params[:email_members].nil?
     group.email_recipient = array_from_input(params[:recipients]).join(',') if !params[:recipients].nil?
+    group.irc_channel_aliases = array_from_input(params[:irc_channel_aliases]).join(',') if !params[:irc_channel_aliases].nil?
     group.save
 
     json_response(200, group.api_hash(true))
@@ -166,6 +167,7 @@ class Controller < Sinatra::Base
       org: org,
       ircserver: server,
       irc_channel: "#{params[:channel]}",
+      irc_channel_aliases: (params[:irc_channel_aliases].nil? ? '' : array_from_input(params[:irc_channel_aliases]).join(',')),
       token: SecureRandom.urlsafe_base64(32),
       name: params[:name],
       due_day: 'every',
