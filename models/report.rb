@@ -50,7 +50,7 @@ class Report
         # If due date is in the past, re-calculate with day++
         if due < now
           puts "Recalculating"
-          due = Time.new(local.year, local.month, local.day+1, group.due_time.hour, group.due_time.minute, group.due_time.second, zone.utc_offset)
+          due = due + 86400
         end
 
         puts "Due: #{due} (#{due.utc})"
