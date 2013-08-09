@@ -218,6 +218,7 @@ namespace :report do
       {:type => 'future',   :title => 'What is your plan for tomorrow?', :entries => []},
       {:type => 'blocking', :title => 'What is blocking you?', :entries => []},
       {:type => 'hero',     :title => 'Who is your hero?', :entries => []},
+      {:type => 'share',     :title => 'What did you share?', :entries => []},
       {:type => 'unknown',  :title => 'Other Updates', :entries => []},
     ]
     help_sentences = {
@@ -240,6 +241,10 @@ namespace :report do
       'hero' => [
         'Did someone make your day? Thank them with "!hero Loqi for being awesome"',
         '"!hero Loqi for always listening" is a great way to make someone\'s day :)',
+      ],
+      'share' => [
+        'Read any good links today? Share them with "!share http://opensourcebridge.org/sessions/1106"',
+        '"!share http://opensourcebridge.org/sessions/1106" is a great way share interesting links',
       ],
       'quote' => [
         'Did someone say something funny? Jot it down with !quote "Some super funny text" -a funny guy',
