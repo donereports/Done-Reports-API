@@ -278,6 +278,7 @@ namespace :report do
       end
       email_data[:report_localtime] = report.date_completed.to_time.localtime(zone.utc_offset)
 
+      # Find all users in the org so that users not in a group also show up
       # Each user gets their own section
       org.users.each do |user|
         # Only include this user in the email if they have some entries
@@ -339,9 +340,18 @@ namespace :report do
         recipients = group.email_recipient.split(",") unless group.email_recipient.nil?
 
         if group.email_group_members
+          # Add all group members to the recipient list
           group.users.each do |user| 
             recipients << user.email
           end
+
+          # Also add anybody else who submitted to the report
+          email_data[:users].each do |user|
+            recipients << user.email
+          end
+
+          # De-dupe
+          recipients.uniq!
         end
 
         # Find all of the types that are not used in this report

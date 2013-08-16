@@ -15,7 +15,7 @@ class Controller < Sinatra::Base
   end
 
   def load_user(username, group)
-    user = group.users.first :username => username
+    user = group.org.users.first :username => username
 
     if user.nil?
       # Check if this is a real account or not
@@ -23,7 +23,7 @@ class Controller < Sinatra::Base
       if test.nil?
         halt json_error(200, {:error => 'user_not_found', :error_description => "No user was found for username \"#{username}\"", :error_username => username})
       else
-        halt json_error(200, {:error => 'user_not_in_group', :error_description => "Sorry, \"#{username}\" is not in the group", :error_username => username})
+        halt json_error(200, {:error => 'user_not_in_org', :error_description => "Sorry, \"#{username}\" is not in this organization", :error_username => username})
       end
     end
 
