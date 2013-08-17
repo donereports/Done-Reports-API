@@ -218,7 +218,6 @@ namespace :report do
       {:type => 'future',   :title => 'What is your plan for tomorrow?', :entries => []},
       {:type => 'blocking', :title => 'What is blocking you?', :entries => []},
       {:type => 'hero',     :title => 'Who is your hero?', :entries => []},
-      {:type => 'share',     :title => 'What did you share?', :entries => []},
       {:type => 'unknown',  :title => 'Other Updates', :entries => []},
     ]
     help_sentences = {
@@ -259,7 +258,8 @@ namespace :report do
       :report => nil,
       :report_localtime => nil,
       :users => [],
-      :quotes => []
+      :quotes => [],
+      :shares => []
     }
 
     puts "  Group '#{group.name}'"
@@ -333,7 +333,12 @@ namespace :report do
         email_data[:quotes] = quotes
       end
 
-      if email_data[:users].count + email_data[:quotes].count > 0
+      shares = report.entries.all(:type => 'share')
+      if shares.count > 0
+        email_data[:shares] = shares
+      end
+
+      if email_data[:users].count + email_data[:quotes].count + email_data[:shares].count > 0
 
         recipients = []
 
@@ -350,13 +355,20 @@ namespace :report do
             recipients << user[:user].email
           end
 
+          # Catches people who only submitted quotes or shares
+          (email_data[:quotes] + email_data[:shares]).each do |quote|
+            recipients << quote.user.email
+          end
+
           # De-dupe
           recipients.uniq!
         end
 
         # Find all of the types that are not used in this report
         types_used = email_data[:users].map{|u| u[:types].map{|t| t[:entries].length > 0 ? t[:type] : nil}.compact}.flatten
-        types_unused = report_types.map{|t| t[:type]} - types_used
+        types_used += ['quote'] if email_data[:quotes].length > 0
+        types_used += ['share'] if email_data[:shares].length > 0
+        types_unused = help_sentences.keys - types_used
 
         # Choose one to highlight in this email
         highlight_type = types_unused.sample
@@ -377,7 +389,7 @@ namespace :report do
         puts email_html
         puts "------"
 
-        template_text = Erubis::Eruby.new File.read 'views/email_text.erb'
+        template_text = Erubis::Eruby.new File.read 'views/email.txt.erb'
         email_text = template_text.result email_data
         puts email_text
         puts "------"
