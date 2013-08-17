@@ -347,17 +347,17 @@ namespace :report do
         if group.email_group_members
           # Add all group members to the recipient list
           group.users.each do |user| 
-            recipients << user.email
+            recipients << user.email_for_org(org)
           end
 
           # Also add anybody else who submitted to the report
           email_data[:users].each do |user|
-            recipients << user[:user].email
+            recipients << user[:user].email_for_org(org)
           end
 
           # Catches people who only submitted quotes or shares
           (email_data[:quotes] + email_data[:shares]).each do |quote|
-            recipients << quote.user.email
+            recipients << quote.user.email_for_org(org)
           end
 
           # De-dupe
