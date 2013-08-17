@@ -347,7 +347,7 @@ namespace :report do
 
           # Also add anybody else who submitted to the report
           email_data[:users].each do |user|
-            recipients << user.email
+            recipients << user[:user].email
           end
 
           # De-dupe
