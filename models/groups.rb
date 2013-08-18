@@ -5,6 +5,7 @@ class Group
   belongs_to :org
   belongs_to :ircserver
   has n, :reports
+  has n, :repos
   has n, :users, :through => :group_user
 
   property :token, String, :length => 128

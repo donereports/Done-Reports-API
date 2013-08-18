@@ -301,8 +301,8 @@ namespace :report do
             end
           end
 
-          # Find any repos this user committed to during the report period
-          repos = Repo.all(:commits => Commit.all(:user => user, 
+          # Find any repos this user committed to during the report period, restricted to the org of this report
+          repos = org.groups.repos.all(:commits => Commit.all(:user => user, 
             :date.gt => report.date_started, 
             :date.lt => report.date_completed))
 
