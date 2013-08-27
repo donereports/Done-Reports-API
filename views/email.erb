@@ -28,7 +28,7 @@
     <% end %>
 
     <% if shares.count > 0 %>
-      <h3 style="font-size: 18pt; color: #cd7d86; font-weight: bold;">shares</h3>
+      <h3 style="font-size: 18pt; color: #cd7d86; font-weight: bold;">!share</h3>
       <ul>
       <% shares.each do |share| %>
         <li><%= share.message %> <span style="font-size: 80%; color: #777;">(via <%= share.user.username %>)</span></li>
@@ -37,7 +37,7 @@
     <% end %>
 
     <% if quotes.count > 0 %>
-      <h3 style="font-size: 18pt; color: #cd7d86; font-weight: bold;">quotes</h3>
+      <h3 style="font-size: 18pt; color: #cd7d86; font-weight: bold;">!quote</h3>
       <ul>
       <% quotes.each do |quote| %>
         <li><%= quote.message %> <span style="font-size: 80%; color: #777;">(via <%= quote.user.username %>)</span></li>

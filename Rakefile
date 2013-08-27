@@ -213,11 +213,11 @@ namespace :report do
     org = group.org
 
     report_types = [
-      {:type => 'doing',    :title => 'What are you working on?', :entries => []},
-      {:type => 'done',     :title => 'What did you do?', :entries => []},
-      {:type => 'future',   :title => 'What is your plan for tomorrow?', :entries => []},
-      {:type => 'blocking', :title => 'What is blocking you?', :entries => []},
-      {:type => 'hero',     :title => 'Who is your hero?', :entries => []},
+      {:type => 'doing',    :title => 'What have you been doing? (!doing)', :entries => []},
+      {:type => 'done',     :title => 'What have you done? (!done)', :entries => []},
+      {:type => 'future',   :title => 'What is your plan for tomorrow? (!todo)', :entries => []},
+      {:type => 'blocking', :title => 'What is blocking you? (!block)', :entries => []},
+      {:type => 'hero',     :title => 'Who is your hero? (!hero)', :entries => []},
       {:type => 'unknown',  :title => 'Other Updates', :entries => []},
     ]
     help_sentences = {
@@ -308,7 +308,7 @@ namespace :report do
 
           if repos.count > 0
             type = {
-              :type => 'commits', :title => 'Active Projects', :entries => []
+              :type => 'commits', :title => 'Active GitHub Projects', :entries => []
             }
             puts "        Commits"
             repos.each do |r|

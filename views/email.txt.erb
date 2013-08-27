@@ -14,14 +14,14 @@ This report was sent on <%= report_localtime.strftime('%A, %B %-d, %Y at %I:%M%P
 <% end %>
 
 <% if shares.count > 0 %>
-shares
+!share
 <% shares.each do |share| %>
    * <%= share.message %> (via <%= share.user.username %>)
 <% end %>
 <% end %>
 
 <% if quotes.count > 0 %>
-quotes
+!quote
 <% quotes.each do |quote| %>
    * <%= quote.message %> (via <%= quote.user.username %>)
 <% end %>
