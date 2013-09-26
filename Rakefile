@@ -215,7 +215,7 @@ namespace :report do
     report_types = [
       {:type => 'doing',    :title => 'What have you been doing? (!doing)', :entries => []},
       {:type => 'done',     :title => 'What have you done? (!done)', :entries => []},
-      {:type => 'future',   :title => 'What is your plan for tomorrow? (!todo)', :entries => []},
+      {:type => 'todo',     :title => 'What is your plan for tomorrow? (!todo)', :entries => []},
       {:type => 'blocking', :title => 'What is blocking you? (!block)', :entries => []},
       {:type => 'hero',     :title => 'Who is your hero? (!hero)', :entries => []},
       {:type => 'unknown',  :title => 'Other Updates', :entries => []},
@@ -229,7 +229,7 @@ namespace :report do
         'Say "!done wrote a blog post" to share what you\'ve finished today',
         'Say "!done ticket #445" to say what you finished today',
       ],
-      'future' => [
+      'todo' => [
         'You can say "!todo take over the world" to share what you plan on working on tomorrow',
         'To share what you plan to do tomorrow, you can say things like "!todo more testing"',
       ],
