@@ -60,6 +60,116 @@ Add the appropriate Github hook to the specified repository. Will fail if the re
 Returns a JSON config block for the group to be put into the IRC bot config file.
 
 
+## List of all API Methods
+
+### Accounts
+
+#### `GET /auth/assertion`
+
+Allows the website to obtain a token for a user without going through Github auth
+
+#### `GET /autocomplete/users`
+
+Website access only. Allows the website to get a list of user accounts beginning with the input text.
+
+#### `GET /autocomplete/user/:username`
+
+Get user info given a username. Returns:
+
+* username
+* email
+* nicks
+* github_username
+* github_email
+
+#### `POST /accounts
+
+Create a new user and corresponding organization.
+
+### Groups
+
+#### `GET /api/groups`
+
+Get a list of all groups the authenticated user has access to across all orgs.
+
+#### `GET /api/orgs/:org/groups`
+
+Get a list of all groups on the given org.
+
+#### `GET /api/orgs/:org/groups/:group`
+
+Retrieve information about a group.
+
+#### `POST /api/orgs/:org/groups/:group`
+
+Update information about a group.
+
+#### `POST /api/orgs/:org/groups`
+
+Create a new group under the given organization.
+
+#### `GET /api/orgs/:org/groups/:group/users`
+
+Get a list of all users in a group.
+
+#### `POST /api/orgs/:org/groups/:group/users`
+
+Add an existing user to a group. If the user is not yet part of the organization, they are added at this time.
+
+#### `POST /api/orgs/:org/groups/:group/users/remove`
+
+Remove a user from a group.
+
+### Orgs
+
+#### `GET /api/orgs/:org/servers`
+
+Get a list of servers for the org.
+
+#### `POST /api/orgs/:org/servers`
+
+Add a new IRC server to the org.
+
+### Users
+
+#### `GET /api/users`
+
+Retrieve all users for all orgs the authenticating user is a member of, including the list of channels each user is in.
+
+#### `GET /api/users/:username`
+
+Get user account info.
+
+#### `POST /api/users/:username`
+
+Update user profile info. Org admins can update the profile info of users in their org.
+
+TODO: Change this to only allow updating profile info of users who do not have their own login.
+
+#### `POST /api/orgs/:org/users`
+
+Create a new user, optionally adding them to a group at the same time.
+
+### Reporting API
+
+#### `POST /api/report/new`
+
+Post a new report. Automatically associated with the current open report for the group.
+
+#### `POST /api/report/remove`
+
+Remove a report. Only entries from an open report can be removed.
+
+#### `GET /api/group/config`
+
+Returns a JSON config block for the group to be loaded into the IRC bot config.
+
+#### `GET /api/bot/config`
+
+Returns a JSON config block for the bot, loaded into the IRC bot config.
+
+
+
 
 ## License
 
