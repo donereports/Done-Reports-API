@@ -154,7 +154,8 @@ class Controller < Sinatra::Base
     server = load_server params[:token]
 
     data = {
-      :groups => []
+      :groups => [],
+      :commands => []
     }
 
     server.groups.each do |group|
@@ -175,6 +176,14 @@ class Controller < Sinatra::Base
       end
 
       data[:groups] << groupInfo
+
+      group.org.commands.each do |command|
+        data[:commands] << command.api_hash
+      end
+    end
+
+    Command.all(:global => true).each do |command|
+      data[:commands] << command.api_hash
     end
 
     json_response 200, data

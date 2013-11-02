@@ -5,6 +5,18 @@ namespace :db do
   task :bootstrap do
     init
     DataMapper.auto_migrate!
+
+
+    # INSERT INTO `commands` (`id`, `command`, `aliases`, `questions`, `responses`, `created_at`, `org_id`, `global`, `report_title`, `tips`, `per_user`)
+    # VALUES
+    #   (1, 'done', NULL, '[\"What did you finish?\",\"Did you finish anything?\"]', '[\":nick: Nicely done.\",\":nick: Nicely done!\",\":nick: Nicely done!\",\":nick: great!\"]', NULL, NULL, 1, 'What have you done? (!done)', '[\"Say \\\"!done wrote a blog post\\\" to share what you\'ve finished today\",\"Say \\\"!done ticket #445\\\" to say what you finished today\"]', 1),
+    #   (2, 'doing', NULL, '[\"What have you been working on?\",\"What are you working on?\"]', '[\":nick: great, thanks!\",\":nick: Great, thanks!\",\":nick: Thanks!\",\":nick: thanks!\",\"Thanks, :nick!\",\"Thanks, :nick\"]', NULL, NULL, 1, 'What have you been doing? (!doing)', '[\"To share things in progress, try \\\"!doing\\\"\",\"If you\'re working on something but not done yet, you can say \\\"!doing something\\\"\"]', 1),
+    #   (3, 'quote', NULL, NULL, '[\":nick: Good one!\",\":nick: good one!\",\":nick: lol!\",\":nick: haha, awesome\",\":nick: haha, awesome!\"]', NULL, NULL, 1, NULL, '[\"Did someone say something funny? Jot it down with !quote \\\"Some super funny text\\\" -a funny guy\",\"Use \'!quote \\\"Some super funny text\\\" -a funny guy\\\' to jot down an awesome quote from someone\",\"Did you hear a useful quote at a conference? Share it with \'!quote \\\"We promise not to screw it up.\\\" -marissa meyer\'\"]', 0),
+    #   (4, 'hero', NULL, '[\"Who is your hero and what did they do?\"]', '[\":nick: sweet!\",\":nick: Sweet!\",\":nick: yeah!!\",\":nick: awesome!\"]', NULL, NULL, 1, NULL, '[\"Did someone make your day? Thank them with \\\"!hero Loqi for being awesome\\\"\",\"\\\"!hero Loqi for always listening\\\" is a great way to make someone\'s day :)\"]', 1),
+    #   (5, 'share', NULL, NULL, '[\":nick: sweet!\",\":nick: Sweet!\",\":nick: yeah!\",\":nick: awesome!\"]', NULL, NULL, 1, 'Who is your hero? (!hero)', '[\"Read any good links today? Share them with \\\"!share http://opensourcebridge.org/sessions/1106\\\",\"\\\"!share http://opensourcebridge.org/sessions/1106\\\" is a great way share interesting links\"]', 0),
+    #   (6, 'todo', NULL, '[\"What are you going to do tomorrow?\",\"What\'s your plan for tomorrow?\"]', NULL, NULL, NULL, 1, 'What is your plan for tomorrow? (!todo)', '[\"You can say \\\"!todo take over the world\\\" to share what you plan on working on tomorrow\",\"To share what you plan to do tomorrow, you can say things like \\\"!todo more testing\\\"\"]', 1),
+    #   (7, 'blocking', '[\"blocked\"]', '[\"What are you stuck on? Or \'not stuck on anything\' is fine too.\",\"What is blocking you? \'Not blocked\' is fine too.\",\"Are you blocked on anything?\"]', '[\":nick: Sorry to hear that!\",\":nick: I will remember that\",\":nick: I hope it is resolved soon!\",\":nick: :(\",\":nick: Thanks for letting me know!\"]', NULL, NULL, 1, 'What is blocking you? (!block)', '[\"If you\'re stuck on something, say \\\"!blocking Internet is down\\\" to share it\",\"If something is blocking you, let everyone know by saying \\\"!blocking not enough time\\\"\"]', 1);
+
   end
 
   task :migrate do
