@@ -27,22 +27,17 @@
 
     <% end %>
 
-    <% if shares.count > 0 %>
-      <h3 style="font-size: 18pt; color: #cd7d86; font-weight: bold;">!share</h3>
-      <ul>
-      <% shares.each do |share| %>
-        <li><%= share.message %> <span style="font-size: 80%; color: #777;">(via <%= share.user.username %>)</span></li>
-      <% end %>
-      </ul>
-    <% end %>
+    <% global.each do |type| %>
 
-    <% if quotes.count > 0 %>
-      <h3 style="font-size: 18pt; color: #cd7d86; font-weight: bold;">!quote</h3>
-      <ul>
-      <% quotes.each do |quote| %>
-        <li><%= quote.message %> <span style="font-size: 80%; color: #777;">(via <%= quote.user.username %>)</span></li>
+      <% if type[:entries].count > 0 %>
+        <h3 style="font-size: 18pt; color: #cd7d86; font-weight: bold;"><%= type[:title] %></h3>
+        <ul>
+        <% type[:entries].each do |entry| %>
+          <li><%= entry.message %> <span style="font-size: 80%; color: #777;">(via <%= entry.user.username %>)</span></li>
+        <% end %>
+        </ul>
       <% end %>
-      </ul>
+
     <% end %>
 
   </div>

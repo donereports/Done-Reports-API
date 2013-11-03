@@ -224,45 +224,19 @@ namespace :report do
     group = report.group
     org = group.org
 
-    report_types = [
-      {:type => 'doing',    :title => 'What have you been doing? (!doing)', :entries => []},
-      {:type => 'done',     :title => 'What have you done? (!done)', :entries => []},
-      {:type => 'todo',     :title => 'What is your plan for tomorrow? (!todo)', :entries => []},
-      {:type => 'blocking', :title => 'What is blocking you? (!block)', :entries => []},
-      {:type => 'hero',     :title => 'Who is your hero? (!hero)', :entries => []},
-      {:type => 'unknown',  :title => 'Other Updates', :entries => []},
-    ]
-    help_sentences = {
-      'doing' => [
-        'To share things in progress, try "!doing"',
-        'If you\'re working on something but not done yet, you can say "!doing something"',
-      ],
-      'done' => [
-        'Say "!done wrote a blog post" to share what you\'ve finished today',
-        'Say "!done ticket #445" to say what you finished today',
-      ],
-      'todo' => [
-        'You can say "!todo take over the world" to share what you plan on working on tomorrow',
-        'To share what you plan to do tomorrow, you can say things like "!todo more testing"',
-      ],
-      'blocking' => [
-        'If you\'re stuck on something, say "!blocking Internet is down" to share it',
-        'If something is blocking you, let everyone know by saying "!blocking not enough time"',
-      ],
-      'hero' => [
-        'Did someone make your day? Thank them with "!hero Loqi for being awesome"',
-        '"!hero Loqi for always listening" is a great way to make someone\'s day :)',
-      ],
-      'share' => [
-        'Read any good links today? Share them with "!share http://opensourcebridge.org/sessions/1106"',
-        '"!share http://opensourcebridge.org/sessions/1106" is a great way share interesting links',
-      ],
-      'quote' => [
-        'Did someone say something funny? Jot it down with !quote "Some super funny text" -a funny guy',
-        'Use \'!quote "Some super funny text" -a funny guy\' to jot down an awesome quote from someone"',
-        'Did you hear a useful quote at a conference? Share it with \'!quote "We promise not to screw it up." -marissa meyer',
-      ]
-    }
+    report_types = []
+    help_sentences = {}
+
+    (group.org.commands + Command.all(:global => true)).each do |command|
+      if command.per_user
+        report_types << {
+          :type => command.command,
+          :title => command.report_title,
+          :entries => []
+        }
+      end
+      help_sentences[command.command] = JSON.parse command.tips
+    end
 
     # Create the object that will be passed into the email erb template
     email_data = {
@@ -340,17 +314,22 @@ namespace :report do
         end
       end
 
-      quotes = report.entries.all(:type => 'quote')
-      if quotes.count > 0
-        email_data[:quotes] = quotes
+      email_data[:global] = []
+
+      (group.org.commands + Command.all(:global => true)).each do |command|
+        if !command.per_user
+          entries = report.entries.all(:type => command.command)
+          if entries.count > 0
+            email_data[:global] << {
+              :type => command.command,
+              :title => command.report_title,
+              :entries => entries
+            }
+          end
+        end
       end
 
-      shares = report.entries.all(:type => 'share')
-      if shares.count > 0
-        email_data[:shares] = shares
-      end
-
-      if email_data[:users].count + email_data[:quotes].count + email_data[:shares].count > 0
+      if email_data[:users].count + email_data[:global].count > 0
 
         recipients = []
 
@@ -367,9 +346,11 @@ namespace :report do
             recipients << user[:user].email_for_org(org)
           end
 
-          # Catches people who only submitted quotes or shares
-          (email_data[:quotes] + email_data[:shares]).each do |quote|
-            recipients << quote.user.email_for_org(org)
+          # Catches people who only submitted global entries (not per-user types like !quote)
+          email_data[:global].each do |type|
+            type[:entries].each do |entry|
+              recipients << entry.user.email_for_org(org)
+            end
           end
 
           # De-dupe
@@ -378,8 +359,9 @@ namespace :report do
 
         # Find all of the types that are not used in this report
         types_used = email_data[:users].map{|u| u[:types].map{|t| t[:entries].length > 0 ? t[:type] : nil}.compact}.flatten
-        types_used += ['quote'] if email_data[:quotes].length > 0
-        types_used += ['share'] if email_data[:shares].length > 0
+        email_data[:global].each do |type|
+          types_used << type[:type] if type[:entries].length > 0
+        end
         types_unused = help_sentences.keys - types_used
 
         # Choose one to highlight in this email

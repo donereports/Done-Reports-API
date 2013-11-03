@@ -13,17 +13,12 @@ This report was sent on <%= report_localtime.strftime('%A, %B %-d, %Y at %I:%M%P
 <% end %>
 <% end %>
 
-<% if shares.count > 0 %>
-!share
-<% shares.each do |share| %>
-   * <%= share.message %> (via <%= share.user.username %>)
+<% global.each do |type| %>
+<% if type[:entries].count > 0 %>
+<%= type[:title] %>
+<% type[:entries].each do |entry| %>
+   * <%= entry.message %> (via <%= entry.user.username %>)
 <% end %>
-<% end %>
-
-<% if quotes.count > 0 %>
-!quote
-<% quotes.each do |quote| %>
-   * <%= quote.message %> (via <%= quote.user.username %>)
 <% end %>
 <% end %>
 
