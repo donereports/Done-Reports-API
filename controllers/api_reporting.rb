@@ -164,6 +164,11 @@ class Controller < Sinatra::Base
         aliases: group.irc_channel_aliases.split(','),
         timezone: group.due_timezone,
         token: group.token,
+        :prompt => {
+          :type => group.prompt_command || 'doing',
+          :hr_from => (group.prompt_from ? group.prompt_from.to_time.strftime('%H').to_i : 9),
+          :hr_to => (group.prompt_to ? group.prompt_to.to_time.strftime('%H').to_i : 18)
+        },
         users: []
       }
 

@@ -28,6 +28,10 @@ class Group
   property :gitlab_api_url, String, :length => 255
   property :gitlab_private_token, String, :length => 255
 
+  property :prompt_command, String, :length => 50
+  property :prompt_from, DateTime, :default => '2000-01-01 09:00:00'
+  property :prompt_to, DateTime, :default => '2000-01-01 18:00:00'
+
   property :created_at, DateTime
 
   def slug
