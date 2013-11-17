@@ -57,7 +57,7 @@ class Controller < Sinatra::Base
   *   - email
   *   - github_email
   *   - github_username
-  * type - past, future, blocking, hero, unknown
+  * type - past, future, blocking, hero, etc
   * message - The text of the report
 
   Post a new report. Automatically associated with the current open report for the group.
@@ -66,6 +66,13 @@ class Controller < Sinatra::Base
     group = load_group params[:token]
 
     user = load_user params[:username], group
+
+    if params[:type].nil? || params[:type] == ""
+      halt json_error 200, {
+        :error => 'missing_type',
+        :error_description => 'The "type" field is required'
+      }
+    end
 
     report = Report.current_report(group)
 
