@@ -52,11 +52,7 @@ class Controller < Sinatra::Base
   `POST /api/report/new`
 
   * token - The token corresponding to the group
-  * user data - The user sending the report
-  *   - username
-  *   - email
-  *   - github_email
-  *   - github_username
+  * username - The user sending the report
   * type - past, future, blocking, hero, etc
   * message - The text of the report
 
