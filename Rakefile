@@ -15,41 +15,11 @@ namespace :db do
     #   (5, 'share', '[\"shared\"]', NULL, '[\":nick: sweet!\",\":nick: Sweet!\",\":nick: yeah!\",\":nick: awesome!\"]', NULL, NULL, 1, '!share', '[\"Read any good links today? Share them with \\\"!share http://opensourcebridge.org/sessions/1106\\\"\",\"\\\"!share http://opensourcebridge.org/sessions/1106\\\" is a great way share interesting links\"]', 0),
     #   (6, 'todo', NULL, '[\"What are you going to do tomorrow?\",\"What\'s your plan for tomorrow?\"]', NULL, NULL, NULL, 1, 'What is your plan for tomorrow? (!todo)', '[\"You can say \\\"!todo take over the world\\\" to share what you plan on working on tomorrow\",\"To share what you plan to do tomorrow, you can say things like \\\"!todo more testing\\\"\"]', 1),
     #   (7, 'blocking', '[\"blocked\"]', '[\"What are you stuck on? Or \'not stuck on anything\' is fine too.\",\"What is blocking you? \'Not blocked\' is fine too.\",\"Are you blocked on anything?\"]', '[\":nick: Sorry to hear that!\",\":nick: I will remember that\",\":nick: I hope it is resolved soon!\",\":nick: :(\",\":nick: Thanks for letting me know!\"]', NULL, NULL, 1, 'What is blocking you? (!block)', '[\"If you\'re stuck on something, say \\\"!blocking Internet is down\\\" to share it\",\"If something is blocking you, let everyone know by saying \\\"!blocking not enough time\\\"\"]', 1);
-
   end
 
   task :migrate do
     init
     DataMapper.auto_upgrade!
-  end
-
-  # Migration task when orgs were added
-  task :add_orgs do
-    puts 'Run the following SQL commands:'
-    puts 'UPDATE groups SET org_id = account_id;'
-    puts 'ALTER TABLE groups DROP COLUMN account_id;'
-
-    User.all.each do |user|
-      # Create an org for each user with a github username
-      if !user.github_username.nil? && user.github_username != ''
-        org = Org.first_or_create(:name => user.github_username)
-        OrgUser.first_or_create({:user_id => user.id, :org_id => org.id}, {:is_admin => true})
-      end
-
-      # Add all the users to the appropriate accounts based on the groups they're currently in
-      user.groups.orgs.each do |org|
-        if org.name == user.username
-          OrgUser.first_or_create({:user_id => user.id, :org_id => org.id}, {:is_admin => true})
-        else
-          user.orgs << org
-        end
-      end
-
-      user.save
-    end
-
-    puts 'ALTER TABLE users DROP COLUMN account_id;'
-    
   end
 end
 
