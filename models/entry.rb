@@ -10,4 +10,13 @@ class Entry
   property :message, Text
 
   property :created_at, DateTime
+
+  def api_hash(timezone)
+    {
+      :id => id,
+      :content => message,
+      :date => date.to_time.localtime(timezone.utc_offset).iso8601,
+      :tags => []
+    }
+  end
 end

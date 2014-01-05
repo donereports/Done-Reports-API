@@ -168,6 +168,28 @@ Returns a JSON config block for the group to be loaded into the IRC bot config.
 
 Returns a JSON config block for the bot, loaded into the IRC bot config.
 
+### Query API
+
+Search by
+* report (returns all entries by default, no pagination)
+* username (defaults to past 10 reports)
+* type
+* tag
+
+Pagination
+* before=:id
+* count=10
+
+#### `GET /api/orgs/:org/groups/:group/reports/100`
+
+Show all entries for the given report
+
+
+#### `GET /api/orgs/:org/reports/users/:username`
+
+Show entries for the given user on the past N reports from all groups in the org
+
+
 
 
 

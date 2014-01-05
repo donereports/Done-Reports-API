@@ -36,4 +36,30 @@ class User
       "https://a248.e.akamai.net/assets.github.com/images/gravatars/gravatar-user-420.png"
     end
   end
+
+  # Returns all the reports this user contributed to in the given org
+  def reports(org, before=false, count=10)
+    ids = []
+    repository.adapter.select('
+      SELECT r.id
+      FROM entries e
+      JOIN reports r ON e.report_id = r.id
+      WHERE user_id = ?
+        AND r.group_id IN (SELECT id FROM groups WHERE org_id = ?)
+        ' + (before ? 'AND r.id < ' + before.to_i.to_s : '') + '
+      GROUP BY r.id
+      ORDER BY e.date DESC
+      LIMIT ?
+    ', id, org.id, count).each do |report|
+      ids << report
+    end
+    Report.all(:id => ids)
+  end
+
+  def api_hash
+    {
+      :username => username,
+      :avatar => avatar_url
+    }
+  end
 end

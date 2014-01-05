@@ -95,7 +95,7 @@ namespace :report do
 
       # Find all users in the org so that users not in a group also show up
       # Each user gets their own section
-      org.users.each do |user|
+      org.users(:order => [:username]).each do |user|
         # Only include this user in the email if they have some entries
         if report.entries.all(:user => user).count > 0
 

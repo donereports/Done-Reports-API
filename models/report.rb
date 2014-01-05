@@ -15,6 +15,24 @@ class Report
 
   property :created_at, DateTime
 
+  # Returns the title of the report
+  # Daily reports have titles like "January 4, 2014"
+  # Weekly reports have titles like "January 4 - 11, 2014", "January 28 - February 4, 2014"
+  def title
+    zone = Timezone::Zone.new :zone => group.due_timezone
+    due = date_due.to_time.localtime(zone.utc_offset)
+    due.strftime('%A, %B %-d, %Y')
+  end
+
+  def api_hash
+    zone = Timezone::Zone.new :zone => group.due_timezone
+    {
+      :id => id,
+      :title => title,
+      :published => date_due.to_time.localtime(zone.utc_offset).iso8601
+    }
+  end
+
   def create_entry(params)
     return Entry.create :report => self, :user => params[:user], :date => Time.now, :type => params[:type], :message => params[:message]
   end

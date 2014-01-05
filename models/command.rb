@@ -20,6 +20,7 @@ class Command
     {
       :command => command,
       :aliases => (aliases ? JSON.parse(aliases) : nil),
+      :title => report_title,
       :questions => (questions ? JSON.parse(questions) : nil),
       :responses => (responses ? JSON.parse(responses) : nil)
     }
