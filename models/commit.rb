@@ -21,9 +21,11 @@ class Commit
   def irc_message
     if type == "commit"
       return false
-    else
+    elsif repo && repo.link
       prefix = repo.link.gsub(/^https?:\/\//, '')
       return "[#{prefix}] #{text} #{link}"
+    else
+      return false
     end
   end
 
