@@ -251,7 +251,7 @@ namespace :report do
     Org.all.each do |org|
       puts "Processing org '#{org.name}'"
 
-      org.groups.each do |group|
+      org.groups(:active => true).each do |group|
 
         # Find an open report, if there are none, then this will create one
         report = Report.current_report(group)
