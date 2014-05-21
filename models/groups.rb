@@ -8,6 +8,8 @@ class Group
   has n, :repos
   has n, :users, :through => :group_user
 
+  property :active, Boolean, :default => true
+
   property :token, String, :length => 128
   property :github_token, String, :length => 32
   property :name, String, :length => 128

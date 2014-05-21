@@ -161,7 +161,7 @@ class Controller < Sinatra::Base
       :commands => {}
     }
 
-    server.groups.each do |group|
+    server.groups(:active => 1).each do |group|
       groupInfo = {
         channel: group.irc_channel,
         aliases: group.irc_channel_aliases.split(','),
