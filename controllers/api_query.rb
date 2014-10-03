@@ -109,7 +109,7 @@ class Controller < Sinatra::Base
 
     json_response(200, {
       user: user.api_hash,
-      url: "#{SiteConfig.base_url}mydone/#{temp_token}"
+      url: "#{SiteConfig.web_url}mydone/#{temp_token}"
     })
   end
 
