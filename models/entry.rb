@@ -16,7 +16,7 @@ class Entry
       :id => id,
       :content => message,
       :date => date.to_time.localtime(timezone.utc_offset).iso8601,
-      :tags => []
+      # :tags => []
     }
   end
 end

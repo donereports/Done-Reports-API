@@ -19,6 +19,7 @@ class Command
   def api_hash
     {
       :command => command,
+      :per_user => per_user,
       :aliases => (aliases ? JSON.parse(aliases) : nil),
       :title => report_title,
       :questions => (questions ? JSON.parse(questions) : nil),

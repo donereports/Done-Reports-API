@@ -1,7 +1,7 @@
 class Controller < Sinatra::Base
 
   get '/?' do
-    redirect 'http://donereports.com/'
+    redirect 'https://donereports.com/'
   end
 
   def array_from_input(input)
