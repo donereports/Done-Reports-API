@@ -150,6 +150,7 @@ class Controller < Sinatra::Base
     json_response(200, {
       commands: get_commands(report.group.org),
       user: user.api_hash,
+      group: report.group.api_hash,
       report: report.api_hash,
       entries: entries
     })
