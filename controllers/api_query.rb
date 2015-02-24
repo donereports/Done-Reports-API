@@ -90,6 +90,37 @@ class Controller < Sinatra::Base
     })
   end
 
+  # Retrieve all reports from a user
+  get '/api/users/me/entries' do
+    auth_user = validate_access_token params[:access_token]
+    user = auth_user
+
+    response = {}
+
+    user.groups.each do |group|
+      response[group.id] = {
+        name: group.name,
+        reports: []
+      }
+      group.reports.each do |report|
+        report_entry = {
+          title: report.title,
+          entries: []
+        }
+        report.entries.all(:user_id => user.id).each do |entry|
+          report_entry[:entries] << "!#{entry.type} #{entry.message}"
+        end
+        if report_entry[:entries].length > 0
+          response[group.id][:reports] << report_entry
+        end
+      end
+    end
+
+    json_response(200, {
+      entries: response  
+    })
+  end
+
   ###############################################
   ## QUERY DONE REPORTS IN PROGRESS
   ##

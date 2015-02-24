@@ -40,7 +40,7 @@ class Controller < Sinatra::Base
     auth_user = validate_access_token params[:access_token]
 
     user = User.first({
-      :account_id => auth_user.account_id,
+#      :account_id => auth_user.account_id,
       :username => params[:username]
     })
 
