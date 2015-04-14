@@ -14,6 +14,7 @@ class User
   property :gitlab_username, String, :length => 255
   property :gitlab_user_id, Integer
   property :nicks, String, :length => 512
+  property :slack_username, String, :length => 128
   property :active, Boolean, :default => true
   property :is_account_admin, Boolean, :default => false
 

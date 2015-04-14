@@ -21,14 +21,26 @@ class Controller < Sinatra::Base
       # Check if this is a real account or not
       test = User.first :username => username
       if test.nil?
-        halt json_error(200, {:error => 'user_not_found', :error_description => "No user was found for username \"#{username}\"", :error_username => username})
+        halt json_error(200, {
+          :error => 'user_not_found', 
+          :error_description => "No user was found for username \"#{username}\"", 
+          :error_username => username
+        })
       else
-        halt json_error(200, {:error => 'user_not_in_org', :error_description => "Sorry, \"#{username}\" is not in this organization", :error_username => username})
+        halt json_error(200, {
+          :error => 'user_not_in_org', 
+          :error_description => "Sorry, \"#{username}\" is not in this organization",
+          :error_username => username
+        })
       end
     end
 
     if user.active == false
-      halt json_error(200, {:error => 'user_disabled', :error_description => "The user account for \"#{username}\" is disabled", :error_username => username})
+      halt json_error(200, {
+        :error => 'user_disabled', 
+        :error_description => "The user account for \"#{username}\" is disabled", 
+        :error_username => username
+      })
     end
 
     user
@@ -99,6 +111,78 @@ class Controller < Sinatra::Base
     end
   end
 
+  post '/api/slack/post' do
+    puts params.inspect
+
+    org = Org.first :slack_team_domain => params[:team_domain], :slack_token => params[:token]
+    if !org
+      halt json_error(200, {
+        :error => 'org_not_found',
+        :text => 'No organization was found for this slack team'
+      })
+    end
+
+    group = Group.first :org => org, :slack_channel => params[:channel_name]
+    if !group
+      halt json_error(200, {
+        :error => 'channel_not_found',
+        :text => 'No channel was found for this slack team'
+      })
+    end
+
+    # Check slack_username as well as username for matches
+    user = org.users.first :slack_username => params[:user_name]
+    if user.nil?
+      user = org.users.first :username => params[:user_name]
+      if user.nil?
+        test = User.first :slack_username => params[:user_name]
+        test = User.first :username => params[:user_name] if test.nil?
+
+        if test.nil?
+          halt json_error(200, {
+            :text => "No user was found for username \"#{params[:user_name]}\""
+          })
+        else
+          halt json_error(200, {
+            :text => "Sorry, \"#{params[:user_name]}\" is not in this organization"
+          })
+        end
+      end
+    end
+
+    if user.active == false
+      halt json_error(200, {
+        :text => "Sorry, the user account for \"#{params[:user_name]}\" is disabled"
+      })
+    end
+
+    report = Report.current_report(group)
+
+    command = Command.create_from_string org, params[:trigger_word][1..-1]
+    message = params[:text][(params[:trigger_word].length+1)..-1]
+    entry = report.create_entry :user => user, :type => command.command, :message => message
+
+    if entry.id
+      responses = [
+        "@#{params[:user_name]}: Got it!",
+        "@#{params[:user_name]}: nice",
+        "@#{params[:user_name]}: Nice!",
+        "@#{params[:user_name]}: Ok!",
+        "@#{params[:user_name]}: thanks!",
+        "@#{params[:user_name]}: awesome!",
+        "@#{params[:user_name]}: Awesome!",
+      ]
+
+      json_response 200, {
+        :text => responses.sample
+      }
+    else
+      json_error 200, {
+        :error => 'unknown_error',
+        :text => 'There was a problem saving the entry'
+      }
+    end
+  end
 
 =begin
   `POST /api/report/remove`

@@ -8,6 +8,8 @@ class Org
   has n, :commands
 
   property :name, String, :length => 128
+  property :slack_team_domain, String, :length => 128
+  property :slack_token, String, :length => 128
 
   property :created_at, DateTime
 end

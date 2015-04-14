@@ -26,4 +26,15 @@ class Command
       :responses => (responses ? JSON.parse(responses) : nil)
     }
   end
+
+  def self.create_from_string(org, string) 
+    command = Command.first :global => true, :command => string
+    return command if command
+    aliases = Command.all(:global => true).map{|c| c.aliases ? (JSON.parse(c.aliases).include?('block') ? c : nil) : nil}
+    return aliases[0] if aliases
+    command = Command.first :org => org, :command => string
+    return command if command
+    aliases = Command.all(:org => org).map{|c| c.aliases ? (JSON.parse(c.aliases).include?('block') ? c : nil) : nil}
+    return aliases[0] if aliases
+  end
 end
