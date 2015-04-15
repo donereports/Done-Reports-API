@@ -114,15 +114,15 @@ class Controller < Sinatra::Base
   post '/api/slack/post' do
     puts params.inspect
 
-    org = Org.first :slack_team_domain => params[:team_domain], :slack_token => params[:token]
-    if !org
+    server = Slackserver.first :team_domain => params[:team_domain], :token => params[:token]
+    if !server
       halt json_error(200, {
         :error => 'org_not_found',
         :text => 'No organization was found for this slack team'
       })
     end
 
-    group = Group.first :org => org, :slack_channel => params[:channel_name]
+    group = Group.first :slackserver => server, :slack_channel => params[:channel_name]
     if !group
       halt json_error(200, {
         :error => 'channel_not_found',
@@ -130,12 +130,13 @@ class Controller < Sinatra::Base
       })
     end
 
+    org = server.org
+
     # Check slack_username as well as username for matches
-    user = org.users.first :slack_username => params[:user_name]
-    if user.nil?
+    slackuser = SlackUser.first :username => params[:user_name], :slackserver => server
+    if slackuser.nil?
       user = org.users.first :username => params[:user_name]
       if user.nil?
-        test = User.first :slack_username => params[:user_name]
         test = User.first :username => params[:user_name] if test.nil?
 
         if test.nil?
@@ -148,6 +149,8 @@ class Controller < Sinatra::Base
           })
         end
       end
+    else
+      user = slackuser.user
     end
 
     if user.active == false

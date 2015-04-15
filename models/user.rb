@@ -6,6 +6,8 @@ class User
   has n, :groups, :through => :group_user
   has n, :orgs, :through => :org_user
 
+  has n, :slackservers, 'SlackUser'
+
   property :username, String, :length => 255
   property :email, String, :length => 255
   property :github_email, String, :length => 255
@@ -14,7 +16,6 @@ class User
   property :gitlab_username, String, :length => 255
   property :gitlab_user_id, Integer
   property :nicks, String, :length => 512
-  property :slack_username, String, :length => 128
   property :active, Boolean, :default => true
   property :is_account_admin, Boolean, :default => false
 

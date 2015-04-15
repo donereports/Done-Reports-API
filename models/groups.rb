@@ -23,7 +23,9 @@ class Group
 
   property :irc_channel, String, :length => 100
   property :irc_channel_aliases, String, :length => 255, :default => ''
+
   property :slack_channel, String, :length => 100
+  belongs_to :slackserver, :required => false
 
   property :github_organization, String, :length => 100
   property :github_access_token, String, :length => 255
